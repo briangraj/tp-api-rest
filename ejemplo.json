@@ -1,0 +1,15 @@
+{
+	"_id" : ObjectId("5e31e9dcf382d205b7e28917"),
+	"anioDictado" : 2020,
+	"duracion" : 30,
+	"tema" : "bigData",
+	"alumnos" : [
+		{
+			"nombre" : "brian",
+			"apellido" : "graj",
+			"dni" : 1,
+			"direccion" : "calle 1",
+			"nota" : 6
+		}
+	]
+}
