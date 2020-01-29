@@ -1,0 +1,22 @@
+{
+  "name": "tp-js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/briangraj/tp-js.git"
+  },
+  "author": "grajeda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/briangraj/tp-js/issues"
+  },
+  "homepage": "https://github.com/briangraj/tp-js#readme",
+  "dependencies": {
+    "mongoose": "^5.8.10"
+  }
+}
