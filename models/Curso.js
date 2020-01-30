@@ -1,16 +1,12 @@
 const mongoose = require('mongoose');
 
+const Alumno = require('./schemas/Alumno');
+
 const Curso = new mongoose.Schema({
-  anioDictado: Number,
-  duracion: Number,
-  tema: String,
-  alumnos: [{
-    nombre: String,
-    apellido: String,
-    dni: Number,
-    direccion: String,
-    nota: Number
-  }]
-});
+  anioDictado: { type: Number },
+  duracion: { type: Number },
+  tema: { type: String },
+  alumnos: { type: [Alumno] }
+}, { collection: 'cursos' });
 
 module.exports = mongoose.model('Curso', Curso);
