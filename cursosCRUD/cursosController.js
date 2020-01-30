@@ -22,6 +22,13 @@ const getCursos = (req, res, next) => {
 };
 
 const getCurso = (req, res, next) => {
+  res.status(200).json({
+    code: 0,
+    message: req.curso
+  });
+};
+
+const findCurso = (req, res, next) => {
   const id = req.params.id;
 
   Curso.findById(id)
@@ -32,10 +39,9 @@ const getCurso = (req, res, next) => {
           message: "El recurso no fue encontrado"
         })
       } else {
-        res.status(200).json({
-          code: 0,
-          message: curso
-        });
+        req.curso = curso;
+
+        next();
       }
     })
     .catch(err => {
@@ -47,7 +53,7 @@ const getCurso = (req, res, next) => {
     })
 };
 
-module.exports = { getCursos, getCurso/*, postFactura, patchFactura, deleteFactura*/ };
+module.exports = { getCursos, getCurso, findCurso/*, postFactura, patchFactura, deleteFactura*/ };
 
 // const postFactura = (req, res, next) => {
 //     const errors = validationResult(req);
