@@ -1,1 +1,4 @@
 esta bien tener el model de alumno aunque no exista la coleccion en mongo??
+cuando busco un curso por id que no existe rompe en vez de decir que no encontro el recurso
+
+
