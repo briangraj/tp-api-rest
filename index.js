@@ -16,7 +16,7 @@ app.use('/cursos', cursosRouter);
 
 const YAML = require('yamljs');
 
-var swaggerUi = require('swagger-ui-express');
+const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = YAML.load('./swagger.yaml');
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
