@@ -11,7 +11,17 @@ app.use(bodyParser.json());
 
 app.use('/cursos', cursosRouter);
 
-app.use('/', (req, res, next) => { res.status(200).json({code: 0, message: "Estás en la página de inicio"}) });
+//app.use('/', (req, res, next) => { res.status(200).json({code: 0, message: "Estás en la página de inicio"}) });
+
+
+const YAML = require('yamljs');
+
+var swaggerUi = require('swagger-ui-express');
+const swaggerDocument = YAML.load('./swagger.yaml');
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+//app.use('/api/v1', router);
+
 
 const mongoURI = "mongodb://localhost:27017/tp";
 

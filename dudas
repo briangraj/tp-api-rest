@@ -3,4 +3,4 @@ cuando busco un curso por id que no existe rompe en vez de decir que no encontro
 que era el __v que se agrega al hacer un post?
 para saber el de mejor nota -> .../alumnos/destacado o .../alumnos?destacado=s
 X por ahora estoy haciendo el sort a mano
-
+si dejo app.use('/', ...) no me toma /api-doc
