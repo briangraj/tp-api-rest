@@ -87,8 +87,27 @@ const postCurso = (req, res, next) => {
       });
     })
 };
+
+const deleteCurso = (req, res, next) => {
+  const id = req.params.id;
+
+  Curso.findByIdAndDelete(id)
+    .then(() => {
+      res.status(200).json({
+        code: 0,
+        message: "Curso eliminado correctamente"
+      })
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        code: 20,
+        message: "Ocurrió un error con un módulo interno"
+      });
+  })
+};
                 
-module.exports = { getCursos, getCurso, findCurso, postCurso/*, patchFactura, deleteFactura*/ };
+module.exports = { getCursos, getCurso, findCurso, postCurso, deleteCurso/*, patchFactura*/ };
                 
 // const patchFactura = (req, res, next) => {
 //     const id = req.params.id;
@@ -120,24 +139,5 @@ module.exports = { getCursos, getCurso, findCurso, postCurso/*, patchFactura, de
 //                         });
 //                     });
 //             }
-//         })
-// };
-
-// const deleteFactura = (req, res, next) => {
-//     const id = req.params.id;
-
-//     Factura.findByIdAndDelete(id)
-//         .then(() => {
-//             res.status(200).json({
-//                 code: 0,
-//                 message: "Factura eliminada correctamente"
-//             })
-//         })
-//         .catch(err => {
-//             console.log(err);
-//             res.status(500).json({
-//                 code: 20,
-//                 message: "Ocurrió un error con un módulo interno"
-//             });
 //         })
 // };
