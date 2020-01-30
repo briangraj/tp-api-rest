@@ -53,42 +53,43 @@ const findCurso = (req, res, next) => {
     })
 };
 
-module.exports = { getCursos, getCurso, findCurso/*, postFactura, patchFactura, deleteFactura*/ };
+const postCurso = (req, res, next) => {
+  // const errors = validationResult(req);
 
-// const postFactura = (req, res, next) => {
-//     const errors = validationResult(req);
+  // if (!errors.isEmpty()) {
+  //   return res.status(400).json({
+  //     code: 10,
+  //     message: errors.array()
+  //   })
+  // }
 
-//     if (!errors.isEmpty()) {
-//         return res.status(400).json({
-//             code: 10,
-//             message: errors.array()
-//         })
-//     }
+  const body = req.body;
 
-//     const body = req.body;
+  const newCurso = new Curso({
+    anioDictado: body.anioDictado,
+    duracion: body.duracion,
+    tema: body.tema,
+    alumnos: body.alumnos
+  });
 
-//     const newFactura = new Factura({
-//         nroFactura: body.nroFactura,
-//         condPago: body.condPago,
-//         fechaVencimiento: body.fechaVencimiento
-//     });
-
-//     newFactura.save()
-//         .then(created => {
-//             res.status(201).json({
-//                 code: 0,
-//                 message: created
-//             });
-//         })
-//         .catch(err => {
-//             console.log(err);
-//             res.status(500).json({
-//                 code: 20,
-//                 message: "Ocurrió un error con un módulo interno"
-//             });
-//         })
-// };
-
+  newCurso.save()
+    .then(created => {
+      res.status(201).json({
+        code: 0,
+        message: created
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        code: 20,
+        message: "Ocurrió un error con un módulo interno"
+      });
+    })
+};
+                
+module.exports = { getCursos, getCurso, findCurso, postCurso/*, patchFactura, deleteFactura*/ };
+                
 // const patchFactura = (req, res, next) => {
 //     const id = req.params.id;
 //     const body = req.body;

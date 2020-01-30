@@ -1,12 +1,12 @@
 const cursosRouter = require('express').Router();
 
-const { getCursos, getCurso, findCurso/*, postFactura, patchFactura, deleteFactura*/ } = require('./cursosController');
+const { getCursos, getCurso, findCurso, postCurso/*, patchFactura, deleteFactura*/ } = require('./cursosController');
 // const { postValidators } = require('./facturasValidators');
 // const { getCliente, patchCliente } = require('../clienteCRUD/clienteController');
 const { getAlumnos/*, postItem, deleteItems*/ } = require('../alumnoCRUD/alumnoController');
 
 cursosRouter.get('/', getCursos);
-// cursosRouter.post('/', postValidators, postFactura);
+cursosRouter.post('/', postCurso);
 
 cursosRouter.get('/:id', findCurso, getCurso);
 // cursosRouter.patch('/:id', patchFactura);
