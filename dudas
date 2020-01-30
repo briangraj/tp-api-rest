@@ -1,7 +1,4 @@
-esta bien tener el model de alumno aunque no exista la coleccion en mongo??(le esta creando _id)
-cuando busco un curso por id que no existe rompe en vez de decir que no encontro el recurso
-que era el __v que se agrega al hacer un post?
-para saber el de mejor nota -> 
-curso/id/destacado
+que era el __v que se agrega al hacer un post? versiones del objeto
+para saber el de mejor nota -> curso/id/destacado
 X por ahora estoy haciendo el sort a mano
 si dejo app.use('/', ...) no me toma /api-doc
