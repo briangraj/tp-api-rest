@@ -15,6 +15,8 @@ tags:
   description: "Everything about your cursos"
 schemes:
 - "http"
+security:
+  - APIKeyHeader: []
 paths:
   /cursos:
     get:
@@ -123,21 +125,16 @@ paths:
         500:
           description: "Error en el servidor"
 securityDefinitions:
-  petstore_auth:
-    type: "oauth2"
-    authorizationUrl: "http://petstore.swagger.io/oauth/dialog"
-    flow: "implicit"
-    scopes:
-      write:pets: "modify pets in your account"
-      read:pets: "read your pets"
-  api_key:
-    type: "apiKey"
-    name: "api_key"
-    in: "header"
+     APIKeyHeader:
+      type: "apiKey"
+      in: "header"
+      name: "Authorization"
 definitions:
   Alumno:
     type: "object"
     properties:
+      _id:
+        type: "string"
       nombre:
         type: "string"
         example: "brian"
@@ -156,9 +153,8 @@ definitions:
   Curso:
     type: "object"
     properties:
-      id:
-        type: "integer"
-        format: "int64"
+      _id:
+        type: "string"
       anioDictado:
         type: "integer"
       duracion:
@@ -168,9 +164,6 @@ definitions:
         example: "bigData"
       alumnos:
         type: "array"
-        xml:
-          name: "curso"
-          wrapped: true
         items:
           $ref: "#/definitions/Alumno"
     xml:
@@ -186,7 +179,4 @@ definitions:
           name: "alumnos"
           wrapped: true
         items:
-          $ref: "#/definitions/Alumno"
-externalDocs:
-  description: "Find out more about Swagger"
-  url: "http://swagger.io"
+          $ref: "#/definitions/Curso"

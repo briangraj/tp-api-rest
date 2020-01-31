@@ -51,21 +51,6 @@ usuarioScheme.statics.findByCredentials = async (username, password) => {
     throw new Error('Invalid login credentials')
   }
   return user
-
-
-  // Usuario.findOne({ username })
-  //   .then((user) => {
-  //     if (!user) {
-  //       throw new Error({ error: 'Invalid login credentials' })
-  //     }
-  //     bcrypt.compare(password, user.password)
-  //       .then((isPasswordMatch) => {
-  //         if (!isPasswordMatch) {
-  //           throw new Error({ error: 'Invalid login credentials' })
-  //         }
-  //       })
-  //     return user
-  //   })
 }
 
 const Usuario = mongoose.model('Usuario', usuarioScheme)

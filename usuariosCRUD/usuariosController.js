@@ -46,7 +46,7 @@ const postLogin = (req, res) => {
       console.log(error)
       res.status(401).json({
         code: 11,
-        message: "Fallo el login"
+        message: "Credenciales no validas"
       })
     })
 }
