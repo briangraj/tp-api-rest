@@ -124,7 +124,6 @@ const getAlumnoDestacado = (req, res, next) => {
   })
   .catch(err => {
     console.log(err);
-    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     res.status(500).json({
       code: 20,
       message: "Ocurrió un error con un módulo interno"

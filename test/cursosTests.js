@@ -4,29 +4,29 @@ const should = require('chai').should(),
   supertest = require('supertest'),
   api = supertest('http://localhost:8080');
 
-describe('User', function() {
+let idCursoTemp
+
+  const body = {
+  'Accept': 'application/json',
+  'Authorization': process.env.TOKEN
+}
+
+
+function assertMessage(done, tipo) {
+  return function(err, res) {
+    expect(res.body).to.have.property("message");
+    expect(res.body.message).to.be.a(tipo);
+    done(err);
+  }
+}
+
+describe('Al buscar todos los cursos', function() {
   var location1;
   var location2;
   var location3;
   var locations = [location1, location2, location3];
 
   // before(function (done) {
-  //   api.post('/cursos')
-  //     .set('Accept', 'application/x-www-form-urlencoded')
-  //     .send({
-  //       addressStreet: "111 Main St",
-  //       addressCity: "Portland",
-  //       addressState: "OR",
-  //       addressZip: "97209",
-  //       userId: 1
-  //     })
-  //     .expect('Content-Type', /json/)
-  //     .expect(200)
-  //     .end(function (err, res) {
-  //       location1 = res.body;
-  //     });
-
-
   //   api.post('/locations')
   //     .set('Accept', 'application/x-www-form-urlencoded')
   //     .send({
@@ -61,42 +61,25 @@ describe('User', function() {
 
   it('deberia retornar 200 cuando tiene el token', function(done) {
     api.get('/cursos')
-      .set({
-        'Accept': 'application/json',
-        'Authorization': process.env.TOKEN
-      })
+      .set(body)
       .expect(200)
-      .end(function(err, res) {
-        expect(res.body).to.have.property("message");
-        expect(res.body.message).to.be.a('array');
-        done(err);
-      })
+      .end(assertMessage(done, 'array'))
   });
 
   it('deberia retornar 401 cuando no tiene el token', function(done) {
     api.get('/cursos')
       .set('Accept', 'application/json')
       .expect(401)
-      .end(function(err, res) {
-        expect(res.body).to.have.property("message");
-        done(err);
-      })
+      .end(assertMessage(done, 'string'))
   });
 
   //TODO deberia ser 4xx
-  it('deberia retornar 500 cuando tiene el token', function(done) {
+  it('deberia retornar 500 cuando no puede resolver', function(done) {
     api.get('/cursos')
       .query({ duracion: 'hola' })
-      .set({
-        'Accept': 'application/json',
-        'Authorization': process.env.TOKEN
-      })
+      .set(body)
       .expect(500)
-      .end(function(err, res) {
-        expect(res.body).to.have.property("message");
-        expect(res.body.message).to.be.a('string');
-        done(err);
-      })
+      .end(assertMessage(done, 'string'))
   });
 
   // it('should return a 200 response', function(done) {
@@ -191,3 +174,65 @@ describe('User', function() {
   // });
 
 });
+
+describe('Al buscar un curso', function() {
+  it('deberia retornar 200 cuando el curso existe', function(done) {
+    api.get(`/cursos/${process.env.ID_CURSO}`)
+      .set(body)
+      .expect(200)
+      .end(assertMessage(done, 'object'))
+  });
+
+  it('deberia retornar 404 cuando el curso no existe', function(done) {
+    api.get(`/cursos/${process.env.ID_CURSO.substring(1)}1`)
+      .set(body)
+      .expect(404)
+      .end(assertMessage(done, 'string'))
+  });
+});
+
+  //   api.post('/cursos')
+  //     .set('Accept', 'application/x-www-form-urlencoded')
+  //     .send({
+  //       addressStreet: "111 Main St",
+  //       addressCity: "Portland",
+  //       addressState: "OR",
+  //       addressZip: "97209",
+  //       userId: 1
+  //     })
+  //     .expect('Content-Type', /json/)
+  //     .expect(200)
+  //     .end(function (err, res) {
+  //       location1 = res.body;
+  //     });
+
+
+// describe('', function() {
+  // it('Al crear un curso deberia retornar 201', function(done) {
+  //   api.post('/cursos')
+  //     .set(body)
+  //     .send({
+  //       "anioDictado": 2020,
+  //       "duracion": 300,
+  //       "tema": "bigData",
+  //       "alumnos": []
+  //     })
+  //     .expect('Content-Type', /json/)
+  //     .expect(201)
+  //     .end(function(err, res) {
+  //       idCursoTemp = res.body.message._id
+  //       done(err)
+  //     })
+  // });
+
+  it('Cuando elimina un curso deberia retornar 200', function(done) {
+    idCursoTemp = '5e34880ed4b73b01c2a63ae9'
+    api.delete(`/cursos/${idCursoTemp}`)
+      .set(body)
+      .expect('Content-Type', /json/)
+      .expect(200)
+      .end(function(err, res) {
+        done(err)
+      })
+  });
+// });
