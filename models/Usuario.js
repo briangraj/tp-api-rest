@@ -20,7 +20,7 @@ const usuarioScheme = mongoose.Schema({
       required: true
     }
   }]
-})
+}, { collection: 'usuarios' })
 
 usuarioScheme.pre('save', async function (next) {
   // Hash the password before saving the user model
