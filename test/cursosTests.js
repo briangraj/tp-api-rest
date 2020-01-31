@@ -1,16 +1,14 @@
 require('dotenv').config()
-const should = require('chai').should(),
-  expect = require('chai').expect,
+const expect = require('chai').expect,
   supertest = require('supertest'),
   api = supertest('http://localhost:8080');
 
 let idCursoTemp
 
-  const body = {
+const body = {
   'Accept': 'application/json',
   'Authorization': process.env.TOKEN
 }
-
 
 function assertMessage(done, tipo) {
   return function(err, res) {
@@ -19,79 +17,73 @@ function assertMessage(done, tipo) {
     done(err);
   }
 }
+describe('Test cursos', function() {
+  describe('Al buscar todos los cursos', function() {
+    it('deberia retornar 200 y message deberia ser un array', function(done) {
+      api.get('/cursos')
+        .set(body)
+        .expect(200)
+        .end(assertMessage(done, 'array'))
+    });
 
-describe('Al buscar todos los cursos', function() {
-  it('deberia retornar 200 cuando tiene el token', function(done) {
-    api.get('/cursos')
+    //TODO deberia ser 4xx
+    it('deberia retornar 500 cuando no puede resolver y message deberia ser un string', function(done) {
+      api.get('/cursos')
+        .query({ duracion: 'hola' })
+        .set(body)
+        .expect(500)
+        .end(assertMessage(done, 'string'))
+    });
+  });
+
+  describe('Al buscar un curso', function() {
+    it('deberia retornar 200 cuando el curso existe y message deberia ser un object', function(done) {
+      api.get(`/cursos/${process.env.ID_CURSO}`)
+        .set(body)
+        .expect(200)
+        .end(assertMessage(done, 'object'))
+    });
+
+    it('deberia retornar 404 cuando el curso no existe y message deberia ser un string', function(done) {
+      api.get(`/cursos/${process.env.ID_CURSO.substring(1)}1`)
+        .set(body)
+        .expect(404)
+        .end(assertMessage(done, 'string'))
+    });
+  });
+
+  it('Al crear un curso deberia retornar 201', function(done) {
+    api.post('/cursos')
       .set(body)
+      .send({
+        "anioDictado": 2020,
+        "duracion": 300,
+        "tema": "bigData",
+        "alumnos": []
+      })
+      .expect('Content-Type', /json/)
+      .expect(201)
+      .end(function(err, res) {
+        idCursoTemp = res.body.message._id
+        done(err)
+      })
+  });
+
+  it('Cuando elimina un curso deberia retornar 200', function(done) {
+    idCursoTemp = '5e34880ed4b73b01c2a63ae9'
+    api.delete(`/cursos/${idCursoTemp}`)
+      .set(body)
+      .expect('Content-Type', /json/)
       .expect(200)
-      .end(assertMessage(done, 'array'))
+      .end(function(err, res) {
+        done(err)
+      })
   });
 
-  it('deberia retornar 401 cuando no tiene el token', function(done) {
-    api.get('/cursos')
-      .set('Accept', 'application/json')
-      .expect(401)
-      .end(assertMessage(done, 'string'))
-  });
-
-  //TODO deberia ser 4xx
-  it('deberia retornar 500 cuando no puede resolver', function(done) {
-    api.get('/cursos')
-      .query({ duracion: 'hola' })
-      .set(body)
-      .expect(500)
-      .end(assertMessage(done, 'string'))
-  });
-});
-
-describe('Al buscar un curso', function() {
-  it('deberia retornar 200 cuando el curso existe', function(done) {
-    api.get(`/cursos/${process.env.ID_CURSO}`)
+  it('Al buscar el alumno destacado de un curso deberia retornar 200 y message deberia ser un object', function(done) {
+    api.get(`/cursos/${process.env.ID_CURSO}/alumno-destacado`)
       .set(body)
       .expect(200)
       .end(assertMessage(done, 'object'))
   });
-
-  it('deberia retornar 404 cuando el curso no existe', function(done) {
-    api.get(`/cursos/${process.env.ID_CURSO.substring(1)}1`)
-      .set(body)
-      .expect(404)
-      .end(assertMessage(done, 'string'))
-  });
-});
-
-it('Al crear un curso deberia retornar 201', function(done) {
-  api.post('/cursos')
-    .set(body)
-    .send({
-      "anioDictado": 2020,
-      "duracion": 300,
-      "tema": "bigData",
-      "alumnos": []
-    })
-    .expect('Content-Type', /json/)
-    .expect(201)
-    .end(function(err, res) {
-      idCursoTemp = res.body.message._id
-      done(err)
-    })
-});
-
-it('Cuando elimina un curso deberia retornar 200', function(done) {
-  idCursoTemp = '5e34880ed4b73b01c2a63ae9'
-  api.delete(`/cursos/${idCursoTemp}`)
-    .set(body)
-    .expect('Content-Type', /json/)
-    .expect(200)
-    .end(function(err, res) {
-      done(err)
-    })
-});
-
-it('Al buscar un los alumnos deberia retornar 200', function(done) {
-  api.get(`/cursos/${process.env.ID_CURSO}/alumno-destacado`)
-    .set(body)
-    .expect(200)
-    .end(assertMessage(done, 'object'))
 });

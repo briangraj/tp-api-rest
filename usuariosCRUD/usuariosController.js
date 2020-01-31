@@ -34,11 +34,6 @@ const postLogin = (req, res) => {
   const { username, password } = req.body
   Usuario.findByCredentials(username, password)
     .then(user => {
-      if (!user) {
-        return res.status(401).json({
-          error: 'Login failed! Check authentication credentials'
-        })
-      }
       user.generateAuthToken()
         .then(token => {
           res.json({
@@ -49,9 +44,9 @@ const postLogin = (req, res) => {
     })
     .catch(error => {
       console.log(error)
-      res.status(400).json({
-        code: 20,
-        message: "Ocurrió un error con un módulo interno"
+      res.status(401).json({
+        code: 11,
+        message: "Fallo el login"
       })
     })
 }
