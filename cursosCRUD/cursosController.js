@@ -45,13 +45,14 @@ const findCurso = (req, res, next) => {
         next();
       }
     })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        code: 20,
-        message: "Ocurrió un error con un módulo interno"
-      });
-    })
+    .catch(next)
+    //   err => {
+    //   console.log(err);
+    //   res.status(500).json({
+    //     code: 20,
+    //     message: "Ocurrió un error con un módulo interno"
+    //   });
+    // })
 };
 
 const postCurso = (req, res, next) => {
@@ -123,6 +124,7 @@ const getAlumnoDestacado = (req, res, next) => {
   })
   .catch(err => {
     console.log(err);
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
     res.status(500).json({
       code: 20,
       message: "Ocurrió un error con un módulo interno"

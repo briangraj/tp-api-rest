@@ -24,6 +24,14 @@ app.use('/usuarios', usuariosRouter)
 
 app.use('/', (req, res, next) => { res.status(200).json({code: 0, message: "Estás en la página de inicio"}) });
 
+app.use(function (err, req, res, next) {
+  console.error(err)
+  res.status(500).json({
+    code: 20,
+    message: "Ocurrió un error con un módulo interno"
+  })
+})
+
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => {
     app.listen(port, () => { console.log(`Corriendo en port ${port}`) })
