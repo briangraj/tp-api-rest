@@ -55,4 +55,5 @@ const postLogin = (req, res) => {
       })
     })
 }
+
 module.exports = { postUsuario, postLogin }
