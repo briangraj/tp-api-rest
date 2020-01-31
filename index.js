@@ -5,7 +5,8 @@ const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
 
 const cursosRouter = require('./cursosCRUD/cursosRouter');
-const usuariosRouter = require('./usuariosCRUD/usuariosRouter')
+const auth = require('./usuariosCRUD/usuariosValidator');
+const usuariosRouter = require('./usuariosCRUD/usuariosRouter');
 const swaggerDocument = YAML.load('./swagger.yaml');
 
 const app = express();
@@ -15,7 +16,7 @@ process.env.JWT_KEY = "clave_segura"
 
 app.use(bodyParser.json());
 
-app.use('/cursos', cursosRouter);
+app.use('/cursos', auth, cursosRouter);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

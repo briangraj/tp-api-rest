@@ -1,10 +1,11 @@
 const Curso = require('../models/Curso');
+const mongoose = require('mongoose');
 
 // const { validationResult } = require('express-validator');
 
 const getCursos = (req, res, next) => {
   const query = req.query || {};
-  
+
   Curso.find(query).limit(10)
     .then(cursos => {
       res.status(200).json({
@@ -97,5 +98,36 @@ const deleteCurso = (req, res, next) => {
       });
   })
 };
-                
-module.exports = { getCursos, getCurso, findCurso, postCurso, deleteCurso };
+
+const getAlumnoDestacado = (req, res, next) => {
+  const id = req.params.id;
+
+  Curso.aggregate([
+    { "$match": { "_id": new mongoose.mongo.ObjectId(id) } },
+    { "$unwind": "$alumnos" },
+    { "$sort": { "alumnos.nota": -1 } },
+    { "$limit": 1 },
+    { "$replaceRoot": { "newRoot": "$alumnos" } }
+  ]).then(resultado => {
+    if(resultado.length === 0) {
+      res.status(404).json({
+        code: 12,
+        message: "El recurso no fue encontrado"
+      })
+    } else {
+      res.status(200).json({
+        code: 0,
+        message: resultado[0]
+      })
+    }
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(500).json({
+      code: 20,
+      message: "Ocurrió un error con un módulo interno"
+    });
+  })
+}
+
+module.exports = { getCursos, getCurso, findCurso, postCurso, deleteCurso, getAlumnoDestacado };
