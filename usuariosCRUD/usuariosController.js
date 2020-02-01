@@ -1,6 +1,7 @@
 const Usuario = require('../models/Usuario');
+const Status = require('../utils/Status');
 
-const postUsuario = (req, res) => {
+const postUsuario = (req, res, next) => {
   // Create a new user
   const body = req.body
 
@@ -13,20 +14,9 @@ const postUsuario = (req, res) => {
   newUsuario.save()
     .then(created => {
       newUsuario.generateAuthToken()
-        .then(token => {
-          res.status(201).json({
-            code: 0,
-            message: created
-          })
-        })
+        .then(() => { Status.created(res, created) })
     })
-    .catch(error => {
-      console.log(error)
-      res.status(400).json({
-        code:20,
-        message: "Ocurrió un error con un módulo interno"
-      })
-    });
+    .catch(next)
 }
 
 const postLogin = (req, res) => {
@@ -44,10 +34,7 @@ const postLogin = (req, res) => {
     })
     .catch(error => {
       console.log(error)
-      res.status(401).json({
-        code: 11,
-        message: "Credenciales no validas"
-      })
+      Status.unauthorized(res, "Credenciales no validas")
     })
 }
 

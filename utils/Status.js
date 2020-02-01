@@ -13,6 +13,13 @@ class Status {
     })
   }
 
+  static unauthorized(res, message) {
+    res.status(401).json({
+      code: 11,
+      message: message
+    })
+  }
+
   static notFound(res) {
     res.status(404).json({
       code: 12,
