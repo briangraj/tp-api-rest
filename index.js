@@ -5,6 +5,7 @@ const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
 
 const cursosRouter = require('./cursosCRUD/cursosRouter');
+const funcionError = require('./utils/Status').funcionError;
 const auth = require('./usuariosCRUD/usuariosValidator');
 const usuariosRouter = require('./usuariosCRUD/usuariosRouter');
 const swaggerDocument = YAML.load('./swagger.yaml');
@@ -20,17 +21,11 @@ app.use('/cursos', auth, cursosRouter);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use('/usuarios', usuariosRouter)
+app.use('/usuarios', usuariosRouter);
 
 app.use('/', (req, res, next) => { res.status(200).json({code: 0, message: "Estás en la página de inicio"}) });
 
-app.use(function (err, req, res, next) {
-  console.error(err)
-  res.status(500).json({
-    code: 20,
-    message: "Ocurrió un error con un módulo interno"
-  })
-})
+app.use(funcionError);
 
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => {

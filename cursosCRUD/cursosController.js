@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Curso = require('../models/Curso');
-const Status = require('./Status');
+const Status = require('../utils/Status');
 // const { validationResult } = require('express-validator');
 
 const getCursos = (req, res, next) => {

@@ -19,6 +19,16 @@ class Status {
       message: "El recurso no fue encontrado"
     })
   }
+
+  static get funcionError() {
+    return function(err, req, res, next) {
+      console.error(err)
+      res.status(500).json({
+        code: 20,
+        message: "Ocurrió un error con un módulo interno"
+      })
+    }
+  }
 }
 
 module.exports = Status
