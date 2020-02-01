@@ -1,5 +1,5 @@
 const Usuario = require('../models/Usuario');
-const unauthorized = require('../utils/Status').unauthorized;
+const Status = require('../utils/Status');
 
 const postUsuario = (req, res, next) => {
   // Create a new user
@@ -34,7 +34,7 @@ const postLogin = (req, res) => {
     })
     .catch(error => {
       console.log(error)
-      unauthorized(res, "Credenciales no validas")
+      Status.unauthorized(res, "Credenciales no validas")
     })
 }
 

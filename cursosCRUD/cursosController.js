@@ -8,10 +8,7 @@ const getCursos = (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    return res.status(400).json({
-        code: 10,
-        message: errors.array()
-    })
+    return Status.badRequest(res, errors.array())
   }
 
   Curso.find(query).limit(10)

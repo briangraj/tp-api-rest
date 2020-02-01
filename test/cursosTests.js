@@ -26,13 +26,12 @@ describe('Test cursos', function() {
         .end(assertMessage(done, 'array'))
     });
 
-    //TODO deberia ser 4xx
-    it('deberia retornar 500 cuando no puede resolver y message deberia ser un string', function(done) {
+    it('deberia retornar 400 cuando como duracion se manda \'hola\' y message deberia ser un array', function(done) {
       api.get('/cursos')
         .query({ duracion: 'hola' })
         .set(body)
-        .expect(500)
-        .end(assertMessage(done, 'string'))
+        .expect(400)
+        .end(assertMessage(done, 'array'))
     });
   });
 
