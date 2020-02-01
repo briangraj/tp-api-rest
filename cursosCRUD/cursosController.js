@@ -1,32 +1,18 @@
-const Curso = require('../models/Curso');
 const mongoose = require('mongoose');
-
+const Curso = require('../models/Curso');
+const Status = require('./Status');
 // const { validationResult } = require('express-validator');
 
 const getCursos = (req, res, next) => {
   const query = req.query || {};
 
   Curso.find(query).limit(10)
-    .then(cursos => {
-      res.status(200).json({
-        code: 0,
-        message: cursos
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        code: 20,
-        message: "Ocurrió un error con un módulo interno"
-      });
-    })
+    .then(cursos => Status.ok(res, cursos))
+    .catch(next)
 };
 
 const getCurso = (req, res, next) => {
-  res.status(200).json({
-    code: 0,
-    message: req.curso
-  });
+  Status.ok(res, req.curso)
 };
 
 const findCurso = (req, res, next) => {
@@ -34,25 +20,14 @@ const findCurso = (req, res, next) => {
 
   Curso.findById(id)
     .then(curso => {
-      if (!curso) {
-        res.status(404).json({
-          code: 12,
-          message: "El recurso no fue encontrado"
-        })
-      } else {
+      if (!curso)
+        Status.notFound(res)
+      else {
         req.curso = curso;
-
         next();
       }
     })
     .catch(next)
-    //   err => {
-    //   console.log(err);
-    //   res.status(500).json({
-    //     code: 20,
-    //     message: "Ocurrió un error con un módulo interno"
-    //   });
-    // })
 };
 
 const postCurso = (req, res, next) => {
@@ -66,42 +41,28 @@ const postCurso = (req, res, next) => {
   });
 
   newCurso.save()
-    .then(created => {
-      res.status(201).json({
-        code: 0,
-        message: created
-      });
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        code: 20,
-        message: "Ocurrió un error con un módulo interno"
-      });
-    })
+    .then(created => { Status.created(res, created) })
+    .catch(next)
 };
 
 const deleteCurso = (req, res, next) => {
   const id = req.params.id;
 
   Curso.findByIdAndDelete(id)
-    .then(() => {
-      res.status(200).json({
-        code: 0,
-        message: "Curso eliminado correctamente"
-      })
-    })
-    .catch(err => {
-      console.log(err);
-      res.status(500).json({
-        code: 20,
-        message: "Ocurrió un error con un módulo interno"
-      });
-  })
+    .then(() => { Status.ok(res, "Curso eliminado correctamente") })
+    .catch(next)
 };
 
 const getAlumnoDestacado = (req, res, next) => {
   const id = req.params.id;
+
+  // Curso.aggregate()
+  // .match({genres: "Documentary"})
+  // .group({_id: {$year: "$released"}, puntajeTotalAnio: {$avg: "$imdb.rating"}})
+  // .addFields({anio: "$_id"})
+  // .project({_id: 0})
+  // .sort({puntajeTotalAnio: -1})
+
 
   Curso.aggregate([
     { "$match": { "_id": new mongoose.mongo.ObjectId(id) } },
@@ -110,25 +71,12 @@ const getAlumnoDestacado = (req, res, next) => {
     { "$limit": 1 },
     { "$replaceRoot": { "newRoot": "$alumnos" } }
   ]).then(resultado => {
-    if(resultado.length === 0) {
-      res.status(404).json({
-        code: 12,
-        message: "El recurso no fue encontrado"
-      })
-    } else {
-      res.status(200).json({
-        code: 0,
-        message: resultado[0]
-      })
-    }
+    if(resultado.length === 0)
+      Status.notFound(res)
+    else
+      Status.ok(res, resultado[0])
   })
-  .catch(err => {
-    console.log(err);
-    res.status(500).json({
-      code: 20,
-      message: "Ocurrió un error con un módulo interno"
-    });
-  })
+  .catch(next)
 }
 
 module.exports = { getCursos, getCurso, findCurso, postCurso, deleteCurso, getAlumnoDestacado };

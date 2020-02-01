@@ -74,10 +74,7 @@ describe('Test cursos', function() {
     api.delete(`/cursos/${idCursoTemp}`)
       .set(body)
       .expect('Content-Type', /json/)
-      .expect(200)
-      .end(function(err, res) {
-        done(err)
-      })
+      .expect(200, done)
   });
 
   it('Al buscar el alumno destacado de un curso deberia retornar 200 y message deberia ser un object', function(done) {
