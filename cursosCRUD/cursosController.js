@@ -56,27 +56,18 @@ const deleteCurso = (req, res, next) => {
 const getAlumnoDestacado = (req, res, next) => {
   const id = req.params.id;
 
-  // Curso.aggregate()
-  // .match({genres: "Documentary"})
-  // .group({_id: {$year: "$released"}, puntajeTotalAnio: {$avg: "$imdb.rating"}})
-  // .addFields({anio: "$_id"})
-  // .project({_id: 0})
-  // .sort({puntajeTotalAnio: -1})
-
-
-  Curso.aggregate([
-    { "$match": { "_id": new mongoose.mongo.ObjectId(id) } },
-    { "$unwind": "$alumnos" },
-    { "$sort": { "alumnos.nota": -1 } },
-    { "$limit": 1 },
-    { "$replaceRoot": { "newRoot": "$alumnos" } }
-  ]).then(resultado => {
-    if(resultado.length === 0)
-      Status.notFound(res)
-    else
-      Status.ok(res, resultado[0])
-  })
-  .catch(next)
+  Curso.aggregate()
+    .match({ _id: new mongoose.mongo.ObjectId(id) })
+    .unwind("$alumnos")
+    .sort({ "alumnos.nota": -1 })
+    .limit(1)
+    .then(resultado => {
+      if(resultado.length === 0)
+        Status.notFound(res)
+      else
+        Status.ok(res, resultado[0])
+    })
+    .catch(next)
 }
 
 module.exports = { getCursos, getCurso, findCurso, postCurso, deleteCurso, getAlumnoDestacado };
