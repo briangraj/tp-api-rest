@@ -1,9 +1,10 @@
 const cursosRouter = require('express').Router();
+const { getValidators } = require('./cursosValidator');
 
 const { getCursos, getCurso, findCurso, postCurso, deleteCurso, getAlumnoDestacado } = require('./cursosController');
 const { getAlumnos } = require('../alumnoCRUD/alumnoController');
 
-cursosRouter.get('/', getCursos);
+cursosRouter.get('/', getValidators, getCursos);
 cursosRouter.post('/', postCurso);
 
 cursosRouter.get('/:id', findCurso, getCurso);

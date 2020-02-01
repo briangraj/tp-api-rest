@@ -1,14 +1,29 @@
+const response = function(res, status, code, message) {
+  res.status(status).json({
+    code: code,
+    message: message
+  })
+}
+
 class Status {
   static ok(res, message) {
-    res.status(200).json({
-      code: 0,
-      message: message
-    })
+    response(res, 200, 0, message)
+    // res.status(200).json({
+    //   code: 0,
+    //   message: message
+    // })
   }
 
   static created(res, message) {
     res.status(201).json({
       code: 0,
+      message: message
+    })
+  }
+
+  static badRequest(res, message) {
+    res.status(400).json({
+      code: 10,
       message: message
     })
   }
@@ -27,14 +42,11 @@ class Status {
     })
   }
 
-  static get funcionError() {
-    return function(err, req, res, next) {
-      console.error(err)
-      res.status(500).json({
-        code: 20,
-        message: "Ocurrió un error con un módulo interno"
-      })
-    }
+  static internalServerError(res) {
+    res.status(500).json({
+      code: 20,
+      message: "Ocurrió un error con un módulo interno"
+    })
   }
 }
 

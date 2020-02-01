@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const Usuario = require('../models/Usuario')
+const Status = require('../utils/Status')
 
 const auth = async(req, res, next) => {
   try {
@@ -13,10 +14,7 @@ const auth = async(req, res, next) => {
     req.token = token
     next()
   } catch (error) {
-    res.status(401).send({ 
-      code: 10,
-      message: 'No tiene permisos para ver el contenido'
-    })
+    Status.unauthorized(res, 'No tiene permisos para ver el contenido')
   }
 }
 

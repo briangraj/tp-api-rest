@@ -5,7 +5,7 @@ const YAML = require('yamljs');
 const swaggerUi = require('swagger-ui-express');
 
 const cursosRouter = require('./cursosCRUD/cursosRouter');
-const funcionError = require('./utils/Status').funcionError;
+const internalServerError = require('./utils/Status').internalServerError;
 const auth = require('./usuariosCRUD/usuariosValidator');
 const usuariosRouter = require('./usuariosCRUD/usuariosRouter');
 const swaggerDocument = YAML.load('./swagger.yaml');
@@ -25,7 +25,10 @@ app.use('/usuarios', usuariosRouter);
 
 app.use('/', (req, res, next) => { res.status(200).json({code: 0, message: "Estás en la página de inicio"}) });
 
-app.use(funcionError);
+app.use(function(err, req, res, next) {
+  console.error(err)
+  internalServerError(res)
+});
 
 mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then(() => {

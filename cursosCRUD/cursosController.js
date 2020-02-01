@@ -1,10 +1,18 @@
 const mongoose = require('mongoose');
 const Curso = require('../models/Curso');
 const Status = require('../utils/Status');
-// const { validationResult } = require('express-validator');
+const { validationResult } = require('express-validator');
 
 const getCursos = (req, res, next) => {
   const query = req.query || {};
+  const errors = validationResult(req);
+
+  if (!errors.isEmpty()) {
+    return res.status(400).json({
+        code: 10,
+        message: errors.array()
+    })
+  }
 
   Curso.find(query).limit(10)
     .then(cursos => Status.ok(res, cursos))
