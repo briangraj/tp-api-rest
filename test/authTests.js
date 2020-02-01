@@ -1,6 +1,5 @@
 require('dotenv').config()
-const expect = require('chai').expect,
-  supertest = require('supertest'),
+const supertest = require('supertest'),
   api = supertest('http://localhost:8080');
 
 const body = {
