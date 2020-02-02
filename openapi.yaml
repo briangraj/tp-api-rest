@@ -1,0 +1,272 @@
+openapi: 3.0.1
+info:
+  title: Swagger tp
+  description: Prueba de swagger para [tp](https://docs.google.com/document/d/11WHvRIowS8IFgWutqvhym93fZ39aRmPlqb8TJ_Nldg8/edit).
+  contact:
+    email: brian.graj@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: http://localhost:8080/
+security:
+- bearerAuth: []
+tags:
+- name: cursos
+- name: usuarios
+paths:
+  /cursos:
+    get:
+      tags:
+      - cursos
+      summary: Busca todos los cursos
+      description: Se pueden filtrar por duracion y anio
+      operationId: getCursos
+      parameters:
+      - name: duracion
+        in: query
+        description: Duracion del curso
+        schema:
+          type: integer
+      - name: anioDictado
+        in: query
+        description: Año en que se dicto el curso
+        schema:
+          type: integer
+      responses:
+        200:
+          description: Se obtuvieron los cursos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CursosResponse'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags:
+      - cursos
+      summary: Agrega un curso
+      operationId: postCursos
+      requestBody:
+        description: Curso a agregar
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Curso'
+        required: true
+      responses:
+        201:
+          description: El curso fue creado
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  /cursos/{id}:
+    get:
+      tags:
+      - cursos
+      summary: Busca un curso por id
+      operationId: getCursoById
+      parameters:
+      - name: id
+        in: path
+        description: Id del curso
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Se obtuvo el curso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Curso'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          description: El curso no existe
+    delete:
+      tags:
+      - cursos
+      summary: Borrar un curso
+      operationId: deleteCurso
+      parameters:
+      - name: id
+        in: path
+        description: Id del curso a borrar
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Curso eliminado correctamente
+        401:
+          $ref: '#/components/responses/Unauthorized'
+  /cursos/{id}/alumnos:
+    get:
+      tags:
+      - cursos
+      summary: Busca los alumnos de un curso
+      operationId: getAlumnosDeCurso
+      parameters:
+      - name: id
+        in: path
+        description: Id del curso
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Se obtuvieron los alumnos del curso
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Alumno'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          description: El curso no existe
+  /cursos/{id}/alumno-destacado:
+    get:
+      tags:
+      - cursos
+      summary: Busca el alumno destacado del curso
+      parameters:
+      - name: id
+        in: path
+        description: Id del curso
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Se obtuvo el alumno destacado
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        404:
+          description: El curso no existe
+  /usuarios:
+    post:
+      tags:
+      - usuarios
+      summary: Crea un usuario
+      requestBody:
+        description: Usuario a crear
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+        required: true
+      responses:
+        200:
+          description: El usuario fue creado
+  /usuarios/login:
+    post:
+      tags:
+      - usuarios
+      summary: Realiza el login
+      requestBody:
+        description: Credenciales
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+        required: true
+      responses:
+        200:
+          description: Credenciales validas
+        401:
+          description: Credenciales no validas
+  /usuarios/me:
+    get:
+      tags:
+      - usuarios
+      summary: Trea los datos del usuario asociado al token
+      responses:
+        200:
+          description: Token correcto
+        401:
+          description: El token no esta registrado
+  /usuarios/me/logout:
+    post:
+      tags:
+      - usuarios
+      summary: Cierra la sesion asociada al token
+      responses:
+        200:
+          description: Se cerro la sesion asociada al token
+        401:
+          description: El token no esta registrado
+  /usuarios/me/logoutall:
+    post:
+      tags:
+      - usuarios
+      summary: Cierra las todas las sesiones del usuarios asociado al token
+      responses:
+        200:
+          description: Se cerraron todas las sesiones
+        401:
+          description: El token no esta registrado
+components:
+  schemas:
+    Alumno:
+      type: object
+      properties:
+        _id:
+          type: string
+        nombre:
+          type: string
+          example: brian
+        apellido:
+          type: string
+          example: graj
+        dni:
+          type: integer
+        direccion:
+          type: string
+          example: calle 1
+        nota:
+          type: integer
+      xml:
+        name: Alumno
+    Curso:
+      type: object
+      properties:
+        _id:
+          type: string
+        anioDictado:
+          type: integer
+        duracion:
+          type: integer
+        tema:
+          type: string
+          example: bigData
+        alumnos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alumno'
+    CursosResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: array
+          items:
+            $ref: '#/components/schemas/Curso'
+    Usuario:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+  securitySchemes:
+    bearerAuth:            # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    Unauthorized:
+      description: El token no se envio o es incorrecto

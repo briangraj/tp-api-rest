@@ -8,7 +8,7 @@ const cursosRouter = require('./cursosCRUD/cursosRouter');
 const Status = require('./utils/Status');
 const auth = require('./usuariosCRUD/usuariosValidator');
 const usuariosRouter = require('./usuariosCRUD/usuariosRouter');
-const swaggerDocument = YAML.load('./swagger.yaml');
+const swaggerDocument = YAML.load('./openapi.yaml');
 
 const app = express();
 const port = 8080;
