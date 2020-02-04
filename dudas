@@ -2,3 +2,7 @@ que era el __v que se agrega al hacer un post? versiones del objeto
 para saber el de mejor nota -> curso/id/destacado
 X por ahora estoy haciendo el sort a mano
 si dejo app.use('/', ...) no me toma /api-doc
+
+
+patch me aislo de la estructura
+con el put tengo que traer la entidad y modificarla

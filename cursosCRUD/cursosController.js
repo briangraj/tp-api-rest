@@ -70,9 +70,15 @@ const getAlumnoDestacado = (req, res, next) => {
       if(resultado.length === 0)
         Status.notFound(res)
       else
-        Status.ok(res, resultado[0])
+        Status.ok(res, resultado[0].alumnos)
     })
     .catch(next)
 }
 
-module.exports = { getCursos, getCurso, findCurso, postCurso, deleteCurso, getAlumnoDestacado };
+const patchCursos = function(req, res, next) {
+  Curso.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+    .then(result => { Status.ok(res, result) })
+    .catch(next)  
+}
+
+module.exports = { getCursos, getCurso, findCurso, postCurso, deleteCurso, getAlumnoDestacado, patchCursos };
