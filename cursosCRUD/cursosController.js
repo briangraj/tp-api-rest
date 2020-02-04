@@ -66,11 +66,12 @@ const getAlumnoDestacado = (req, res, next) => {
     .unwind("$alumnos")
     .sort({ "alumnos.nota": -1 })
     .limit(1)
+    .replaceRoot("alumnos")
     .then(resultado => {
       if(resultado.length === 0)
         Status.notFound(res)
       else
-        Status.ok(res, resultado[0].alumnos)
+        Status.ok(res, resultado[0])
     })
     .catch(next)
 }
