@@ -66,6 +66,7 @@ const getAlumnoDestacado = (req, res, next) => {
     .unwind("$alumnos")
     .sort({ "alumnos.nota": -1 })
     .limit(1)
+    .replaceRoot("alumnos")
     .then(resultado => {
       if(resultado.length === 0)
         Status.notFound(res)
@@ -75,4 +76,10 @@ const getAlumnoDestacado = (req, res, next) => {
     .catch(next)
 }
 
-module.exports = { getCursos, getCurso, findCurso, postCurso, deleteCurso, getAlumnoDestacado };
+const patchCursos = function(req, res, next) {
+  Curso.findByIdAndUpdate(req.params.id, { $set: req.body }, { new: true })
+    .then(result => { Status.ok(res, result) })
+    .catch(next)  
+}
+
+module.exports = { getCursos, getCurso, findCurso, postCurso, deleteCurso, getAlumnoDestacado, patchCursos };

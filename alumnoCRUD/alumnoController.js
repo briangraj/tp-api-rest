@@ -4,4 +4,4 @@ const getAlumnos = (req, res, next) => {
   ok(res, req.curso.alumnos)
 };
 
-  module.exports = { getAlumnos };
+module.exports = { getAlumnos };
