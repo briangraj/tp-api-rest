@@ -11,7 +11,7 @@ const getCursos = (req, res, next) => {
     return Status.badRequest(res, errors.array())
   }
 
-  Curso.find(query).limit(10)
+  Curso.find(query)
     .then(cursos => Status.ok(res, cursos))
     .catch(next)
 };
